@@ -1,13 +1,13 @@
-package com.craftinginterpreters.lox;
+package lox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static com.craftinginterpreters.lox.TokenType.*;
+import static lox.TokenType.*;
 
 class Scanner {
-	private static final Map<string, TokenType> keywords;
+	private static final Map<String, TokenType> keywords;
 	static {
 		keywords = new HashMap<>();
 		keywords.put("and", AND);
@@ -94,9 +94,9 @@ class Scanner {
 				string();
 				break;
 			default:
-				if (isDigit()) {
+				if (isDigit(c)) {
 					number();
-				} else if (isAlpha()) {
+				} else if (isAlpha(c)) {
 					identifier();
 				} else {
 					Lox.error(line, "unexpected character");
@@ -118,13 +118,13 @@ class Scanner {
 	private void number() {
 		while (isDigit(peek())) advance();
 		
-		if (peek() == "." && isDigit(peekNext())) {
+		if (peek() == '.' && isDigit(peekNext())) {
 			advance();
 			while (isDigit(peek())) advance();
 		}		
 
-		String numberString = source.subString(start, current-1);
-		addToken(NUMBER, DOUBLE.parseDouble(numberString));
+		String numberString = source.substring(start, current);
+		addToken(NUMBER, Double.parseDouble(numberString));
 	}
 
 	private void string() {
@@ -161,13 +161,13 @@ class Scanner {
 	}
 
 	private boolean isAlpha(char c) {
-		return (c >= "a" && c <= "z") ||
-				(c >= "A" && c <= "Z") ||
-				c == "_";
+		return (c >= 'a' && c <= 'z') ||
+				(c >= 'A' && c <= 'Z') ||
+				c == '_';
 	}
 
 	private boolean isDigit(char c) {
-		return c > "0" && c < "9";
+		return c >= '0' && c <= '9';
 	};
 
 	private boolean isAlphaNumeric(char c) {
